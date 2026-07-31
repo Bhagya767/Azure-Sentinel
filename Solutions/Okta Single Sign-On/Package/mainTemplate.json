@@ -80,18 +80,18 @@
       "_analyticRulecontentProductId3": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','e27dd7e5-4367-4c40-a2b7-fcd7e7a8a508','-', '1.1.2')))]"
     },
     "analyticRuleObject4": {
-      "analyticRuleVersion4": "1.1.1",
+      "analyticRuleVersion4": "1.1.2",
       "_analyticRulecontentId4": "78d2b06c-8dc0-40e1-91c8-66d916c186f3",
       "analyticRuleId4": "[resourceId('Microsoft.SecurityInsights/AlertRuleTemplates', '78d2b06c-8dc0-40e1-91c8-66d916c186f3')]",
       "analyticRuleTemplateSpecName4": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat(parameters('workspace'),'-ar-',uniquestring('78d2b06c-8dc0-40e1-91c8-66d916c186f3')))]",
-      "_analyticRulecontentProductId4": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','78d2b06c-8dc0-40e1-91c8-66d916c186f3','-', '1.1.1')))]"
+      "_analyticRulecontentProductId4": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','78d2b06c-8dc0-40e1-91c8-66d916c186f3','-', '1.1.2')))]"
     },
     "analyticRuleObject5": {
-      "analyticRuleVersion5": "1.1.2",
+      "analyticRuleVersion5": "1.1.3",
       "_analyticRulecontentId5": "41e843a8-92e7-444d-8d72-638f1145d1e1",
       "analyticRuleId5": "[resourceId('Microsoft.SecurityInsights/AlertRuleTemplates', '41e843a8-92e7-444d-8d72-638f1145d1e1')]",
       "analyticRuleTemplateSpecName5": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat(parameters('workspace'),'-ar-',uniquestring('41e843a8-92e7-444d-8d72-638f1145d1e1')))]",
-      "_analyticRulecontentProductId5": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','41e843a8-92e7-444d-8d72-638f1145d1e1','-', '1.1.2')))]"
+      "_analyticRulecontentProductId5": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','41e843a8-92e7-444d-8d72-638f1145d1e1','-', '1.1.3')))]"
     },
     "analyticRuleObject6": {
       "analyticRuleVersion6": "1.1.3",
@@ -101,11 +101,11 @@
       "_analyticRulecontentProductId6": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','c2697b81-7fe9-4f57-ba1d-de46c6f91f9c','-', '1.1.3')))]"
     },
     "analyticRuleObject7": {
-      "analyticRuleVersion7": "1.1.2",
+      "analyticRuleVersion7": "1.1.3",
       "_analyticRulecontentId7": "9f82a735-ae43-4c03-afb4-d5d153e1ace1",
       "analyticRuleId7": "[resourceId('Microsoft.SecurityInsights/AlertRuleTemplates', '9f82a735-ae43-4c03-afb4-d5d153e1ace1')]",
       "analyticRuleTemplateSpecName7": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/',concat(parameters('workspace'),'-ar-',uniquestring('9f82a735-ae43-4c03-afb4-d5d153e1ace1')))]",
-      "_analyticRulecontentProductId7": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','9f82a735-ae43-4c03-afb4-d5d153e1ace1','-', '1.1.2')))]"
+      "_analyticRulecontentProductId7": "[concat(take(variables('_solutionId'),50),'-','ar','-', uniqueString(concat(variables('_solutionId'),'-','AnalyticsRule','-','9f82a735-ae43-4c03-afb4-d5d153e1ace1','-', '1.1.3')))]"
     },
     "analyticRuleObject8": {
       "analyticRuleVersion8": "1.1.2",
@@ -234,7 +234,11 @@
       "parserVersion1": "1.0.2",
       "parserContentId1": "OktaSSO-Parser"
     },
-    "_solutioncontentProductId": "[concat(take(variables('_solutionId'),50),'-','sl','-', uniqueString(concat(variables('_solutionId'),'-','Solution','-',variables('_solutionId'),'-', variables('_solutionVersion'))))]"
+    "_solutioncontentProductId": "[concat(take(variables('_solutionId'),50),'-','sl','-', uniqueString(concat(variables('_solutionId'),'-','Solution','-',variables('_solutionId'),'-', variables('_solutionVersion'))))]",
+    "SessionId": "authenticationContext_externalSessionId_s",
+    "_SessionId": "[variables('SessionId')]",
+    "TargetUserAltId": "TargetUser_alternateId",
+    "_TargetUserAltId": "[variables('TargetUserAltId')]"
   },
   "resources": [
     {
@@ -646,7 +650,7 @@
                 "description": "This query detects cases in which Okta FastPass effectively prevented access to a known phishing website.",
                 "displayName": "Okta Fast Pass phishing Detection",
                 "enabled": false,
-                "query": "// Add any known good IPs to this list to reduce noise\nlet AllowedIPList = dynamic([]);\nOktaSSO\n| where isnotempty(client_ipAddress_s) and client_ipAddress_s !in (AllowedIPList)\n| where eventType_s == 'user.authentication.auth_via_mfa'\n| where outcome_result_s == 'FAILURE'\n| where outcome_reason_s == 'FastPass declined phishing attempt'\n| summarize StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_ipAddress_s, client_geographicalContext_state_s,displayMessage_s, outcome_result_s,\n outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_userAgent_rawUserAgent_s,client_userAgent_browser_s, severity_s, client_geographicalContext_city_s, client_geographicalContext_country_s\n| extend Location = strcat(client_geographicalContext_city_s, \"-\", client_geographicalContext_country_s), AccountName = tostring(split(actor_alternateId_s, \"@\")[0]), AccountUPNSuffix = tostring(split(actor_alternateId_s, \"@\")[1])\n",
+                "query": "// Add any known good IPs to this list to reduce noise\nlet AllowedIPList = dynamic([]);\nOktaSSO\n| where isnotempty(client_ipAddress_s) and client_ipAddress_s !in (AllowedIPList)\n| where eventType_s == 'user.authentication.auth_via_mfa'\n| where outcome_result_s == 'FAILURE'\n| where outcome_reason_s == 'FastPass declined phishing attempt'\n| summarize StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_ipAddress_s, client_geographicalContext_state_s,displayMessage_s, outcome_result_s,\n outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_userAgent_rawUserAgent_s,client_userAgent_browser_s, severity_s, client_geographicalContext_city_s, client_geographicalContext_country_s\n| extend Location = strcat(client_geographicalContext_city_s, \"-\", client_geographicalContext_country_s), AccountName = tostring(split(actor_alternateId_s, \"@\")[0]), AccountUPNSuffix = tostring(split(actor_alternateId_s, \"@\")[1])\n",
                 "queryFrequency": "PT1H",
                 "queryPeriod": "PT1H",
                 "severity": "Medium",
@@ -703,10 +707,10 @@
                   }
                 ],
                 "customDetails": {
-                  "UserAgent": "client_userAgent_rawUserAgent_s",
                   "UserAgentOS": "client_userAgent_os_s",
+                  "Location": "Location",
                   "UserAgentBrowser": "client_userAgent_browser_s",
-                  "Location": "Location"
+                  "UserAgent": "client_userAgent_rawUserAgent_s"
                 },
                 "alertDetailsOverride": {
                   "alertDisplayNameFormat": "Okta FastPass phishing attempt declined for {{actor_alternateId_s}}",
@@ -782,7 +786,7 @@
                 "description": "This query identifies users seen login from a new geo location/country and a new device, then correlates that sign-in with successful risky operations such as policy changes, MFA changes, API token actions etc. This can be an indication of an attacker gaining access to a user's credentials and then performing critical operations, which typically requires admin privileges. By detecting such patterns, organizations can quickly respond to potential security incidents and mitigate risks associated with unauthorized access and privilege escalation.",
                 "displayName": "New Device/Location sign-in along with critical operation",
                 "enabled": false,
-                "query": "let timeframe = 1h;\nlet RiskyOperations = dynamic([\"policy.rule.update\",\"policy.rule.create\",\"policy.rule.delete\", \"policy.rule.deactivate\", \"policy.lifecycle.update\", \"policy.rule.modify\", \"policy.lifecycle.create\", \"policy.lifecycle.delete\", \"policy.lifecycle.deactivate\", \"policy.lifecycle.modify\", \"network_zone.rule.disabled\", \"system.api_token.create\", \"system.api_token.revoke\", \"application.policy.sign_on.update\", \"application.policy.sign_on.rule.delete\",\"user.mfa.factor.deactivate\", \"user.mfa.factor.reset_all\", \"system.mfa.factor.deactivate\", \"user.mfa.attempt_bypass\"]);\nlet UserLoginNewCountryDevice = OktaSSO\n| where eventType_s == \"user.session.start\"\n| where outcome_result_s == \"SUCCESS\"\n| extend debugContext_debugData_logOnlySecurityData_s = column_ifexists('debugContext_debugData_logOnlySecurityData_s', '{}')\n| extend behaviors = parse_json(tostring(parse_json(debugContext_debugData_logOnlySecurityData_s).behaviors))\n| where tostring(behaviors.[\"New Country\"]) == \"POSITIVE\"\n| where tostring(behaviors.[\"New Geo-Location\"]) == \"POSITIVE\"\n| where tostring(behaviors.[\"New Device\"]) == \"POSITIVE\"\n| summarize by timekey = bin(TimeGenerated, timeframe), actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, authenticationContext_externalSessionId_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d\n| extend Location = strcat(client_geographicalContext_city_s, \"-\", client_geographicalContext_country_s);\nlet RiskyOperationsObserved = OktaSSO\n| where eventType_s in (RiskyOperations)\n| where outcome_result_s == \"SUCCESS\"\n| summarize by timekey = bin(TimeGenerated, timeframe), actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, authenticationContext_externalSessionId_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d;\nUserLoginNewCountryDevice\n| join kind=inner (RiskyOperationsObserved) on timekey, actor_displayName_s, client_ipAddress_s\n| project TimeGenerated = timekey, actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, authenticationContext_externalSessionId_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, Location\n| extend AccountName = tostring(split(actor_alternateId_s, \"@\")[0]), AccountUPNSuffix = tostring(split(actor_alternateId_s, \"@\")[1])\n",
+                "query": "let timeframe = 1h;\nlet RiskyOperations = dynamic([\"policy.rule.update\",\"policy.rule.create\",\"policy.rule.delete\", \"policy.rule.deactivate\", \"policy.lifecycle.update\", \"policy.rule.modify\", \"policy.lifecycle.create\", \"policy.lifecycle.delete\", \"policy.lifecycle.deactivate\", \"policy.lifecycle.modify\", \"network_zone.rule.disabled\", \"system.api_token.create\", \"system.api_token.revoke\", \"application.policy.sign_on.update\", \"application.policy.sign_on.rule.delete\",\"user.mfa.factor.deactivate\", \"user.mfa.factor.reset_all\", \"system.mfa.factor.deactivate\", \"user.mfa.attempt_bypass\"]);\nlet UserLoginNewCountryDevice = OktaSSO\n| where eventType_s == \"user.session.start\"\n| where outcome_result_s == \"SUCCESS\"\n| extend debugContext_debugData_logOnlySecurityData_s = column_ifexists('debugContext_debugData_logOnlySecurityData_s', '{}')\n| extend behaviors = parse_json(tostring(parse_json(debugContext_debugData_logOnlySecurityData_s).behaviors))\n| where tostring(behaviors.[\"New Country\"]) == \"POSITIVE\"\n| where tostring(behaviors.[\"New Geo-Location\"]) == \"POSITIVE\"\n| where tostring(behaviors.[\"New Device\"]) == \"POSITIVE\"\n| summarize by timekey = bin(TimeGenerated, timeframe), actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, authenticationContext_externalSessionId_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d\n| extend Location = strcat(client_geographicalContext_city_s, \"-\", client_geographicalContext_country_s);\nlet RiskyOperationsObserved = OktaSSO\n| where eventType_s in (RiskyOperations)\n| where outcome_result_s == \"SUCCESS\"\n| summarize by timekey = bin(TimeGenerated, timeframe), actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, authenticationContext_externalSessionId_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d;\nUserLoginNewCountryDevice\n| join kind=inner (RiskyOperationsObserved) on timekey, actor_displayName_s, client_ipAddress_s\n| project TimeGenerated = timekey, actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, authenticationContext_externalSessionId_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, Location\n| extend AccountName = tostring(split(actor_alternateId_s, \"@\")[0]), AccountUPNSuffix = tostring(split(actor_alternateId_s, \"@\")[1])\n",
                 "queryFrequency": "PT1H",
                 "queryPeriod": "PT1H",
                 "severity": "Medium",
@@ -840,13 +844,13 @@
                   }
                 ],
                 "customDetails": {
+                  "ActorDisplayName": "actor_displayName_s",
+                  "Location": "Location",
+                  "ActorBrowser": "client_userAgent_browser_s",
+                  "SessionId": "[variables('_SessionId')]",
                   "ActorOS": "client_userAgent_os_s",
                   "UserAgent": "client_userAgent_rawUserAgent_s",
-                  "ActorDisplayName": "actor_displayName_s",
-                  "SessionId": "authenticationContext_externalSessionId_s",
-                  "Location": "Location",
-                  "ActorDevice": "client_device_s",
-                  "ActorBrowser": "client_userAgent_browser_s"
+                  "ActorDevice": "client_device_s"
                 },
                 "alertDetailsOverride": {
                   "alertDisplayNameFormat": "New Device/Location {{Location}} sign-in along with critical operation",
@@ -968,10 +972,10 @@
                 ],
                 "customDetails": {
                   "Duration": "seconds",
-                  "TotalAttempts": "totalattempts",
-                  "Denies": "failures",
                   "Successes": "successes",
-                  "SessionId": "authenticationContext_externalSessionId_s",
+                  "SessionId": "[variables('_SessionId')]",
+                  "Denies": "failures",
+                  "TotalAttempts": "totalattempts",
                   "Pushes": "pushes"
                 },
                 "alertDetailsOverride": {
@@ -1048,7 +1052,7 @@
                 "description": "The Okta risk engine auto-assigns risk levels to each login attempt. This rule identifies successful admin operations that correlate with successful high-risk Okta authentication or session start events.",
                 "displayName": "High-Risk Admin Activity",
                 "enabled": false,
-                "query": "let AdminActivity = dynamic([\"iam.role.create\",\"iam.role.permissions.add\",\"user.session.access_admin_app\",\"user.mfa.factor.suspend\", \"user.account.privilege.grant\", \"group.privilege.grant\", \"system.api_token.create\", \"user.session.impersonation.grant\"]);\n// Define the list of allowed admins to exclude from the alert. This can be modified to include specific admin accounts that are known to perform high-risk activities as part of their job function.\nlet AllowedAdmins = dynamic([]);\nlet AdminOperations = OktaSSO\n| where actor_alternateId_s !in (AllowedAdmins)\n| where eventType_s in (AdminActivity)\n| where outcome_result_s =~ 'SUCCESS' \n| summarize  StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by  actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, authenticationContext_externalSessionId_s;\nlet HighRiskEvents = OktaSSO\n| where eventType_s in ('policy.evaluate_sign_on' , 'user.session.start')\n| extend debugContext_debugData_logOnlySecurityData_s = column_ifexists('debugContext_debugData_logOnlySecurityData_s', '{}')\n| where parse_json(tostring(parse_json(debugContext_debugData_logOnlySecurityData_s).risk)).level =~ \"HIGH\"\n| where outcome_result_s =~ 'SUCCESS'\n| extend reasons = tostring(parse_json(tostring(parse_json(debugContext_debugData_logOnlySecurityData_s).risk)).reasons)\n| summarize  StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by  actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, authenticationContext_externalSessionId_s, reasons;\nAdminOperations\n| join kind=inner (HighRiskEvents) on actor_displayName_s, client_ipAddress_s, authenticationContext_externalSessionId_s\n| project StartTime, EndTime, actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), debugContext_debugData_threatSuspected_s, client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, authenticationContext_externalSessionId_s, reasons\n| extend AccountName = tostring(split(actor_alternateId_s, \"@\")[0]), AccountUPNSuffix = tostring(split(actor_alternateId_s, \"@\")[1])\n",
+                "query": "let AdminActivity = dynamic([\"iam.role.create\",\"iam.role.permissions.add\",\"user.session.access_admin_app\",\"user.mfa.factor.suspend\", \"user.account.privilege.grant\", \"group.privilege.grant\", \"system.api_token.create\", \"user.session.impersonation.grant\"]);\n// Define the list of allowed admins to exclude from the alert. This can be modified to include specific admin accounts that are known to perform high-risk activities as part of their job function.\nlet AllowedAdmins = dynamic([]);\nlet AdminOperations = OktaSSO\n| where actor_alternateId_s !in (AllowedAdmins)\n| where eventType_s in (AdminActivity)\n| where outcome_result_s =~ 'SUCCESS' \n| summarize  StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by  actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, authenticationContext_externalSessionId_s;\nlet HighRiskEvents = OktaSSO\n| where eventType_s in ('policy.evaluate_sign_on' , 'user.session.start')\n| extend debugContext_debugData_logOnlySecurityData_s = column_ifexists('debugContext_debugData_logOnlySecurityData_s', '{}')\n| where parse_json(tostring(parse_json(debugContext_debugData_logOnlySecurityData_s).risk)).level =~ \"HIGH\"\n| where outcome_result_s =~ 'SUCCESS'\n| extend reasons = tostring(parse_json(tostring(parse_json(debugContext_debugData_logOnlySecurityData_s).risk)).reasons)\n| summarize  StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by  actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, authenticationContext_externalSessionId_s, reasons;\nAdminOperations\n| join kind=inner (HighRiskEvents) on actor_displayName_s, client_ipAddress_s, authenticationContext_externalSessionId_s\n| project StartTime, EndTime, actor_alternateId_s, actor_displayName_s, client_userAgent_os_s, client_userAgent_browser_s, client_device_s, client_userAgent_rawUserAgent_s, client_ipAddress_s, client_geographicalContext_country_s, client_geographicalContext_city_s, displayMessage_s, outcome_result_s, outcome_reason_s, column_ifexists('debugContext_debugData_logOnlySecurityData_s', \"\"), column_ifexists('debugContext_debugData_threatSuspected_s', \"\"), client_geographicalContext_geolocation_lat_d, client_geographicalContext_geolocation_lon_d, authenticationContext_externalSessionId_s, reasons\n| extend AccountName = tostring(split(actor_alternateId_s, \"@\")[0]), AccountUPNSuffix = tostring(split(actor_alternateId_s, \"@\")[1])\n",
                 "queryFrequency": "PT1H",
                 "queryPeriod": "PT1H",
                 "severity": "Medium",
@@ -1107,11 +1111,11 @@
                   }
                 ],
                 "customDetails": {
-                  "AdminDisplayName": "actor_displayName_s",
+                  "SessionId": "[variables('_SessionId')]",
+                  "AdminDevice": "client_device_s",
                   "UserAgent": "client_userAgent_rawUserAgent_s",
-                  "SessionId": "authenticationContext_externalSessionId_s",
-                  "AdminDeviceOS": "client_userAgent_os_s",
-                  "AdminDevice": "client_device_s"
+                  "AdminDisplayName": "actor_displayName_s",
+                  "AdminDeviceOS": "client_userAgent_os_s"
                 },
                 "alertDetailsOverride": {
                   "alertDisplayNameFormat": "High-Risk admin activity by {{actor_displayName_s}} from IP {{client_ipAddress_s}}",
@@ -1244,11 +1248,11 @@
                   }
                 ],
                 "customDetails": {
-                  "UserAgent": "client_userAgent_rawUserAgent_s",
                   "ActorDeviceOSVersion": "NewDevice_osVersion",
-                  "ActorDeviceOS": "NewDevice_osPlatform",
+                  "Location": "Location",
                   "ActorDisplayName": "actor_displayName_s",
-                  "Location": "Location"
+                  "ActorDeviceOS": "NewDevice_osPlatform",
+                  "UserAgent": "client_userAgent_rawUserAgent_s"
                 },
                 "alertDetailsOverride": {
                   "alertDisplayNameFormat": "Device registration from Malicious IP {{client_ipAddress_s}}",
@@ -1376,8 +1380,9 @@
                   "EventType": "eventType_s",
                   "ActorDisplayName": "actor_displayName_s",
                   "TargetUserType": "TargetUser_type",
-                  "TargetUserAltId": "TargetUser_alternateId",
-                  "TargetUserName": "TargetUser_displayName"
+                  "TargetUserName": "TargetUser_displayName",
+                  "ActorDisplayName": "actor_displayName_s",
+                  "TargetUserAltId": "[variables('_TargetUserAltId')]"
                 },
                 "alertDetailsOverride": {
                   "alertDisplayNameFormat": "Okta session impersonation by {{actor_displayName_s}} for {{TargetUser_displayName}}",
@@ -1570,7 +1575,7 @@
                             "instructionSteps": [
                               {
                                 "title": "Option 1 - Azure Resource Manager (ARM) Template",
-                                "description": "This method provides an automated deployment of the Okta SSO connector using an ARM Tempate.\n\n1. Click the **Deploy to Azure** button below. \n\n\t[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sentineloktaazuredeployv2-solution)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://aka.ms/sentineloktaazuredeployv2-solution-gov)\n2. Select the preferred **Subscription**, **Resource Group** and **Location**. \n3. Enter the **Workspace ID**, **Workspace Key**, **API Token** and **URI**. \n - Use the following schema for the `uri` value: `https://<OktaDomain>/api/v1/logs?since=` Replace `<OktaDomain>` with your domain. [Click here](https://developer.okta.com/docs/reference/api-overview/#url-namespace) for further details on how to identify your Okta domain namespace. There is no need to add a time value to the URI, the Function App will dynamically append the inital start time of logs to UTC 0:00 for the current UTC date as time value to the URI in the proper format. \n - Note: If using Azure Key Vault secrets for any of the values above, use the`@Microsoft.KeyVault(SecretUri={Security Identifier})`schema in place of the string values. Refer to [Key Vault references documentation](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) for further details. \n4. Mark the checkbox labeled **I agree to the terms and conditions stated above**. \n5. Click **Purchase** to deploy."
+                                "description": "This method provides an automated deployment of the Okta SSO connector using an ARM Tempate.\n\n1. Click the **Deploy to Azure** button below. \n\n\t[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sentineloktaazuredeployv2-solution)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovernbutton)](https://aka.ms/sentineloktaazuredeployv2-solution-gov)\n2. Select the preferred **Subscription**, **Resource Group** and **Location**. \n3. Enter the **Workspace ID**, **Workspace Key**, **API Token** and **URI**. \n - Use the following schema for the `uri` value: `https://<OktaDomain>/api/v1/logs?since=` Replace `<OktaDomain>` with your domain. [Click here](https://developer.okta.com/docs/reference/api-overview/#url-namespace) for further details on how to identify your Okta domain namespace. There is no need to add a time value to the URI, the Function App will dynamically append the inital start time of logs to UTC 0:00 for the current UTC date as time value to the URI in the proper format. \n - Note: If using Azure Key Vault secrets for any of the values above, use the`@Microsoft.KeyVault(SecretUri={Security Identifier})`schema in place of the string values. Refer to [Key Vault references documentation](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) for further details. \n4. Mark the checkbox labeled **I agree to the terms and conditions stated above**. \n5. Click **Purchase** to deploy."
                               },
                               {
                                 "title": "Option 2 - Manual Deployment of Azure Functions",
@@ -1800,7 +1805,7 @@
                     "instructionSteps": [
                       {
                         "title": "Option 1 - Azure Resource Manager (ARM) Template",
-                        "description": "This method provides an automated deployment of the Okta SSO connector using an ARM Tempate.\n\n1. Click the **Deploy to Azure** button below. \n\n\t[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sentineloktaazuredeployv2-solution)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://aka.ms/sentineloktaazuredeployv2-solution-gov)\n2. Select the preferred **Subscription**, **Resource Group** and **Location**. \n3. Enter the **Workspace ID**, **Workspace Key**, **API Token** and **URI**. \n - Use the following schema for the `uri` value: `https://<OktaDomain>/api/v1/logs?since=` Replace `<OktaDomain>` with your domain. [Click here](https://developer.okta.com/docs/reference/api-overview/#url-namespace) for further details on how to identify your Okta domain namespace. There is no need to add a time value to the URI, the Function App will dynamically append the inital start time of logs to UTC 0:00 for the current UTC date as time value to the URI in the proper format. \n - Note: If using Azure Key Vault secrets for any of the values above, use the`@Microsoft.KeyVault(SecretUri={Security Identifier})`schema in place of the string values. Refer to [Key Vault references documentation](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) for further details. \n4. Mark the checkbox labeled **I agree to the terms and conditions stated above**. \n5. Click **Purchase** to deploy."
+                        "description": "This method provides an automated deployment of the Okta SSO connector using an ARM Tempate.\n\n1. Click the **Deploy to Azure** button below. \n\n\t[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/sentineloktaazuredeployv2-solution)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovernbutton)](https://aka.ms/sentineloktaazuredeployv2-solution-gov)\n2. Select the preferred **Subscription**, **Resource Group** and **Location**. \n3. Enter the **Workspace ID**, **Workspace Key**, **API Token** and **URI**. \n - Use the following schema for the `uri` value: `https://<OktaDomain>/api/v1/logs?since=` Replace `<OktaDomain>` with your domain. [Click here](https://developer.okta.com/docs/reference/api-overview/#url-namespace) for further details on how to identify your Okta domain namespace. There is no need to add a time value to the URI, the Function App will dynamically append the inital start time of logs to UTC 0:00 for the current UTC date as time value to the URI in the proper format. \n - Note: If using Azure Key Vault secrets for any of the values above, use the`@Microsoft.KeyVault(SecretUri={Security Identifier})`schema in place of the string values. Refer to [Key Vault references documentation](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) for further details. \n4. Mark the checkbox labeled **I agree to the terms and conditions stated above**. \n5. Click **Purchase** to deploy."
                       },
                       {
                         "title": "Option 2 - Manual Deployment of Azure Functions",
@@ -4912,7 +4917,7 @@
           ],
           "metadata": {
             "comments": "This OKTA connector uses okta API to perform different actions on the user accounts.",
-            "lastUpdateTime": "2026-07-28T16:51:39.236Z",
+            "lastUpdateTime": "2026-07-31T13:18:19.183Z",
             "releaseNotes": {
               "version": "1.0",
               "title": "[variables('blanks')]",
