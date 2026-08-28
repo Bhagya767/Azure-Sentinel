@@ -845,6 +845,9 @@ function createCCPConnectorResources($contentResourceDetails, $dataFileMetadata,
                     $fileContent.name = "[concat('" + $nameWithoutPlaceHolder + "', parameters('workspace'))]"
                 }
                 $armResource = Get-ArmResource $fileContent.name $fileContent.type $fileContent.kind $fileContent.properties
+                if ($null -ne $fileContent.dependsOn -and @($fileContent.dependsOn).Count -gt 0) {
+                    $armResource | Add-Member -MemberType NoteProperty -Name "dependsOn" -Value @($fileContent.dependsOn)
+                }
 
                 # location
                 ProcessPropertyPlaceholders -armResource $armResource -templateContentConnections $templateContentConnections -isOnlyObjectCheck $false -propertyObject $armResource -propertyName 'location' -isInnerObject $false -innerObjectName $null -kindType $null -isSecret $true -isRequired $false -fileType 'dataCollectionRules' -minLength 1

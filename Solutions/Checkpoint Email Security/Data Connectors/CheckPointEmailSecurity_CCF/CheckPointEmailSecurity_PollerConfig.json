@@ -50,8 +50,8 @@
       "paging": {
         "pagingType": "NextPageToken",
         "nextPageTokenJsonPath": "$.responseEnvelope.scrollId",
-        "NextPageParaName": "scrollId",
-        "pagingInfoPlacement": "QueryString"
+        "NextPageParaName": "$.requestData.scrollId",
+        "pagingInfoPlacement": "RequestBody"
       },
       "connectorDefinitionName": "CheckPointEmailSecConnector",
       "dataType": "CheckPointEmailSecurityEvents",
